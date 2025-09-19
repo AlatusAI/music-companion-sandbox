@@ -26,9 +26,9 @@ export default function ChatComposer() {
     try {
       const res = await axios.post(`${API}/api/assemble`, {
         project_id: "demo",
-        arrangement: response?.structure?.map(s => s.section)
+        arrangement: response?.structure?.map((s) => s.section),
       });
-      setResponse(prev => ({ ...prev, assembled: res.data }));
+      setResponse((prev) => ({ ...prev, assembled: res.data }));
     } finally {
       setLoading(false);
     }
@@ -43,7 +43,9 @@ export default function ChatComposer() {
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
         />
-        <button type="submit" disabled={loading}>{loading ? "Generating..." : "Generate"}</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Generating..." : "Generate"}
+        </button>
       </form>
 
       {response && (
