@@ -1,26 +1,44 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from ai import generate_song, generate_instrument_part, assemble_song
 
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/api/health", methods=["GET"])
+@app.get("/api/health")
 def health():
-    return jsonify({"ok": True})
+  return jsonify(status="ok")
 
-@app.route("/api/generate", methods=["POST"])
+@app.post("/api/generate")
 def generate():
-    data = request.get_json() or {}
-    prompt = data.get("prompt", "").strip()
-    if any(k in prompt.lower() for k in ["solo", "guitar", "trumpet", "piano", "sax", "violin", "drum"]):
-        return jsonify(generate_instrument_part(prompt))
-    return jsonify(generate_song(prompt))
+  data = request.get_json(force=True)
+  prompt = data.get("prompt", "")
+  # Mock response for now
+  return jsonify({
+    "type": "full_song",
+    "key": "C minor",
+    "tempo_bpm": 92,
+    "chord_progression": ["Cm7", "Abmaj7", "Fm7", "G7"],
+    "structure": [
+      {"section": "Intro", "bars": 8},
+      {"section": "Verse", "bars": 16},
+      {"section": "Chorus", "bars": 16}
+    ],
+    "lyrics": "Hold the night while the city sleeps..."
+  })
 
-@app.route("/api/assemble", methods=["POST"])
+@app.post("/api/assemble")
 def assemble():
-    data = request.get_json() or {}
-    return jsonify(assemble_song(data))
+  data = request.get_json(force=True)
+  arrangement = data.get("arrangement", [])
+  # Mock stems
+  return jsonify({
+    "stems": [
+      {"name": "Drums", "url": "https://example.com/stems/drums.wav"},
+      {"name": "Bass",  "url": "https://example.com/stems/bass.wav"},
+      {"name": "Piano", "url": "https://example.com/stems/piano.wav"}
+    ],
+    "arrangement": arrangement
+  })
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+  app.run(host="0.0.0.0", port=5000, debug=True)
