@@ -1,9 +1,11 @@
-version: "3.8"
 services:
   backend:
     build: ./music-backend
     ports:
       - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+      - PYTHONUNBUFFERED=1
     volumes:
       - ./music-backend:/app
 
@@ -11,7 +13,7 @@ services:
     build: ./music-frontend
     ports:
       - "3000:3000"
-    volumes:
-      - ./music-frontend:/app
     environment:
       - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./music-frontend:/app
